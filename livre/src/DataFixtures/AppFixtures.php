@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Book;
+
 use App\Entity\Author;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
