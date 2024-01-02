@@ -7,6 +7,7 @@ use App\Repository\AuthorRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AuthorRepository::class)]
 class Author
@@ -14,18 +15,30 @@ class Author
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getBooks"])]
+    #[Groups(["getBooks",'getAuthor'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getBooks"])]
+    #[Groups(["getBooks",'getAuthor'])]
+    #[Assert\NotBlank(message: "Le nom de l'auteur est obligatoire")]
+    #[Assert\Length(min: 1, max: 255, minMessage: "Le titre doit faire
+au moins {{ limit }} caractères", maxMessage: "Le titre ne peut pas
+faire plus de {{ limit }} caractères")]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getBooks"])]
+    #[Groups(["getBooks",'getAuthor'])]
+    #[Assert\NotBlank(message: "Le prénom de l'auteur est obligatoire")]
+    #[Assert\Length(min: 1, max: 255, minMessage: "Le titre doit faire
+au moins {{ limit }} caractères", maxMessage: "Le titre ne peut pas
+faire plus de {{ limit }} caractères")]
     private ?string $lastName = null;
 
-    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Book::class)]
+
+    protected $book;
+
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Book::class, orphanRemoval:true)]
+    
     private Collection $books;
 
     public function __construct()
